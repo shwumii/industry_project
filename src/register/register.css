@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap");
+
+.addUser {
+  background-color: #2d1f70;
+  color: white;
+  margin: 5%;
+  width: 30%;
+  font-family: "Comfortaa";
+}
+
+.addUserForm .inputGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.addUserForm .loginGroup label {
+  margin-top: 10px;
+}
+
+.addUserForm .inputGroup input {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+
+.inputGroup button {
+  margin-top: 10px;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.login {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.login .btn.btn-primary {
+  width: 50%;
+}
+
+.addUser h3 {
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0, 0.7);
+}

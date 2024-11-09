@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap");
+
+.verifyUser {
+  background-color: #2d1f70;
+  color: white;
+  margin: 5%;
+  width: 30%;
+  font-family: "Comfortaa";
+}
+
+.verifyUserForm .inputGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.verifyUserForm .loginGroup label {
+  margin-top: 10px;
+}
+
+.verifyUserForm .inputGroup input {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+
+.htmlFor label {
+  margin-top: 20px;
+}
+
+.loginSubmitButton button {
+  margin-top: 10px;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.login {
+  margin-top: 0px;
+  text-align: left;
+}
+
+.login .btn.btn-primary {
+  width: 50%;
+}
+
+.verifyUser h3 {
+  text-align: center; /* Fixed typo: text-alignment should be text-align */
+  font-weight: medium;
+  color: white;
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0, 0.7);
+  font-family: "Comfortaa";
+}
+
+.formContainer {
+  margin-top: 10px;
+  display: flex; /* Flex container for aligning form elements */
+  align-items: center; /* Align vertically centered */
+  justify-content: space-between; /* This ensures space between the checkbox and register link */
+  width: 100%;
+}
+
+.rememberMeCheckBox {
+  margin-right: 10px; /* Adds space on the right of the checkbox */
+}
+
+.registerButton {
+  margin-left: auto; /* Pushes the register link to the right */
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inputGroup input {
+  margin-top: 5px;
+  padding: 10px;
+}
+
+.registerButton {
+  margin-left: auto; /* Aligns the register button/link to the right */
+}
