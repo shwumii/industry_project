@@ -6,6 +6,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { CookiesProvider, useCookies } from "react-cookie";
 import ProjectsTable from "./projects/ProjectsTable";
+import CustomSearchBox from "./projects/CustomSearchBox";
+import AssetsTable from "./projects/AssetsTable";
 
 function App() {
   const [cookies, setCookie] = useCookies(["user"]);
@@ -28,7 +30,8 @@ function App() {
       element: <Register />,
     },
     {
-      path: "/projectstable", // Register route
+      path: "/projects", // Register route
+      element: <CustomSearchBox />,
       element: <ProjectsTable />,
     },
   ]);
