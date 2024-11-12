@@ -1,70 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Table } from "react-bootstrap";
 import CustomSearchBox from "./CustomSearchBox"; // Import the custom search box
 
-// Test data
-const initialProjects = [
-  {
-    name: "Marketing Revamp",
-    type: "Marketing",
-    clientName: "Client A",
-    startDate: "2023-06-01",
-    endDate: "2024-01-15",
-  },
-  {
-    name: "New Product Launch",
-    type: "Development",
-    clientName: "Client B",
-    startDate: "2024-01-01",
-    endDate: "2024-08-15",
-  },
-  {
-    name: "Customer Engagement Strategy",
-    type: "Customer Success",
-    clientName: "Client C",
-    startDate: "2022-10-10",
-    endDate: "2023-10-10",
-  },
-  {
-    name: "Website Overhaul",
-    type: "Design",
-    clientName: "Client D",
-    startDate: "2023-09-01",
-    endDate: "2024-05-01",
-  },
-  // Additional test data...
-];
-
 const ProjectsTable = () => {
-  const [projects, setProjects] = useState(initialProjects); // State for project data
+  const [projects, setProjects] = useState([]); // State for project data
   const [selectedRow, setSelectedRow] = useState(null); // State for selected row
   const [isEditing, setIsEditing] = useState(false); // Flag for enabling editing mode
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [addFormVisible, setAddFormVisible] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    type: "",
+    client: "",
+    date_start: "",
+    date_end: "",
+  });
 
-  const getData = async () => {
+  const getProject = async () => {
     const response = await fetch("http://localhost:5000/projects");
 
     try {
-      const data = await response.json();
-      console.log(data);
-      setProjects(data);
-      return data;
+      const getProject = await response.json();
+      console.log(getProject);
+      setProjects(getProject);
+      return getProject;
     } catch (error) {
       console.error("error", error);
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const addProject = async (newProject) => {
+    const response = await fetch("http://localhost:5000/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProject), // Sends the full newProject object
+    });
 
-  // Define project types for the combo box
-  const projectTypes = [
-    "Induction Training",
-    "Procedural Training",
-    "Immersive Experience",
-    "LMS Content",
-  ];
+    if (response.ok) {
+      const addedProject = await response.json();
+      console.log("Project added:", addedProject);
+      // Optionally refresh the project list after adding
+      getProject();
+    } else {
+      console.error("Error adding project");
+    }
+  };
+
+  useEffect(() => {
+    getProject();
+  }, []);
 
   // Define columns for the table
   const columns = [
@@ -78,23 +64,22 @@ const ProjectsTable = () => {
     },
     {
       Header: "Client Name",
-      accessor: "clientName",
+      accessor: "client",
     },
     {
       Header: "Start Date",
-      accessor: "startDate",
+      accessor: "date_start",
     },
     {
       Header: "End Date",
-      accessor: "endDate",
+      accessor: "date_end",
     },
   ];
 
   // Handle row click for selecting a project
   const handleRowClick = (rowIndex) => {
     if (selectedRow !== rowIndex) {
-      setSelectedRow(rowIndex);
-      setIsEditing(true); // Automatically enable edit mode when selecting a row
+      setSelectedRow(rowIndex); // Select the row only
     }
   };
 
@@ -102,7 +87,7 @@ const ProjectsTable = () => {
   const handleAddProject = () => {
     const newProject = {
       name: "",
-      type: "Induction Training", // Default to "Induction Training"
+      type: "", // Default to "Induction Training"
       clientName: "",
       startDate: "",
       endDate: "",
@@ -128,7 +113,9 @@ const ProjectsTable = () => {
 
   // Enable or disable editing mode
   const toggleEditMode = () => {
-    setIsEditing(!isEditing); // Toggle the editing mode
+    if (selectedRow !== null) {
+      setIsEditing(!isEditing); // Toggle editing mode if a row is selected
+    }
   };
 
   // Search filter handler
@@ -158,10 +145,60 @@ const ProjectsTable = () => {
     };
   }, [isEditing]);
 
+  const handleNameChange = (e) => {
+    setForm({
+      ...form,
+      name: e.target.value,
+    });
+  };
+  const handleTypeChange = (e) => {
+    setForm({
+      ...form,
+      type: e.target.value,
+    });
+  };
+  const handleClientChange = (e) => {
+    setForm({
+      ...form,
+      client: e.target.value,
+    });
+  };
+  const handleDateStartChange = (e) => {
+    setForm({
+      ...form,
+      date_start: e.target.value,
+    });
+  };
+  const handleDateEndChange = (e) => {
+    setForm({
+      ...form,
+      date_end: e.target.value,
+    });
+  };
+
+  const submitForm = () => {
+    // validation
+    const isValid = true;
+
+    if (isValid) {
+      //addProject();
+      console.log("It Works!");
+    }
+  };
+
+  const addFormRowRef = useRef(null);
+  const handleBlur = (e) => {
+    if (!addFormRowRef.current.matches(":focus-within")) {
+      submitForm();
+    }
+  };
+
   return (
     <div className="table-container">
       <CustomSearchBox filterHandler={handleSearch} />
-      <Button onClick={handleAddProject}>Add Project</Button>
+      <Button type="button" onClick={() => setAddFormVisible(!addFormVisible)}>
+        Add Project
+      </Button>
       <Button
         onClick={toggleEditMode}
         variant="warning"
@@ -181,76 +218,128 @@ const ProjectsTable = () => {
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.Header}>{column.Header}</th>
+              <th
+                key={column.Header}
+                style={{
+                  borderBottom: "4px solid #2d1f70", // Thicker border for header
+                  color: "black",
+                  padding: "8px",
+                }}
+              >
+                {column.Header}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
+          {addFormVisible && (
+            <tr ref={addFormRowRef}>
+              <td>
+                <input
+                  name="name"
+                  value={form.name}
+                  onBlur={handleBlur}
+                  onChange={handleNameChange}
+                  type="text"
+                  autoFocus
+                />
+              </td>
+              <td>
+                <input
+                  name="type"
+                  value={form.type}
+                  onBlur={handleBlur}
+                  onChange={handleTypeChange}
+                  type="text"
+                />
+              </td>
+              <td>
+                <input
+                  name="client"
+                  value={form.client}
+                  onBlur={handleBlur}
+                  onChange={handleClientChange}
+                  type="text"
+                />
+              </td>
+              <td>
+                <input
+                  name="date_start"
+                  value={form.date_start}
+                  onChange={handleDateStartChange}
+                  type="text"
+                />
+              </td>
+              <td>
+                <input
+                  name="date_end"
+                  value={form.date_end}
+                  onBlur={handleBlur}
+                  onChange={handleDateEndChange}
+                  type="text"
+                />
+              </td>
+            </tr>
+          )}
+
           {filteredProjects.map((project, rowIndex) => (
             <tr
               key={rowIndex}
               onClick={() => handleRowClick(rowIndex)}
               style={{
                 backgroundColor:
-                  rowIndex === selectedRow ? "#1e52df" : "#f9f9f9", // Highlight selected row
-                color: rowIndex === selectedRow ? "white" : "black", // Change text color of selected row
+                  rowIndex === selectedRow ? "#1e52df" : "#f9f9f9",
               }}
             >
-              {columns.map((column) => {
-                return (
-                  <td
-                    key={column.accessor}
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "8px",
-                      cursor:
-                        isEditing && rowIndex === selectedRow
-                          ? "pointer"
-                          : "default",
-                    }}
-                  >
-                    {column.accessor === "type" &&
-                    isEditing &&
-                    rowIndex === selectedRow ? (
-                      // Display the combo box for the "type" column in edit mode
-                      <select
-                        value={project[column.accessor]}
-                        onChange={(e) => {
-                          e.stopPropagation(); // Prevent deselection of the row when changing value
-                          handleCellChange(
-                            column.accessor,
-                            rowIndex,
-                            e.target.value
-                          );
-                        }}
-                      >
-                        {projectTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    ) : isEditing && rowIndex === selectedRow ? (
-                      // Display an input for editing text fields
-                      <input
-                        type="text"
-                        value={project[column.accessor]}
-                        onChange={(e) => {
-                          e.stopPropagation(); // Prevent deselection of the row when changing value
-                          handleCellChange(
-                            column.accessor,
-                            rowIndex,
-                            e.target.value
-                          );
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      project[column.accessor] // Display normal text if not editing
-                    )}
-                  </td>
-                );
-              })}
+              {columns.map((column) => (
+                <td
+                  key={column.accessor}
+                  style={{
+                    border: "2px solid #2d1f70", // Thicker border for cells
+                    padding: "8px",
+                    backgroundColor:
+                      rowIndex === selectedRow ? "#1e52df" : "#f9f9f9",
+                    color: rowIndex === selectedRow ? "white" : "black",
+                    cursor:
+                      isEditing && rowIndex === selectedRow
+                        ? "pointer"
+                        : "default",
+                  }}
+                >
+                  {column.accessor === "name" &&
+                  isEditing &&
+                  rowIndex === selectedRow ? (
+                    <input
+                      type="text"
+                      value={project[column.accessor]}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleCellChange(
+                          column.accessor,
+                          rowIndex,
+                          e.target.value
+                        );
+                      }}
+                      autoFocus
+                    />
+                  ) : isEditing && rowIndex === selectedRow ? (
+                    <input
+                      type="text"
+                      value={project[column.accessor]}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleCellChange(
+                          column.accessor,
+                          rowIndex,
+                          e.target.value
+                        );
+                      }}
+                    />
+                  ) : (
+                    project[column.accessor]
+                  )}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
