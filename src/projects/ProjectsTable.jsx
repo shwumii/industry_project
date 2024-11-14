@@ -114,7 +114,8 @@ const ProjectsTable = () => {
     }
   };
 
-  const addProject = async (newProjectArray) => {
+  //STILL Work on this
+  const updateProject = async (newProjectArray) => {
     const [name, type, client, date_start, date_end] = newProjectArray;
 
     const newProjectObject = { name, type, client, date_start, date_end };
