@@ -10,10 +10,10 @@ import CustomSearchBox from "./projects/CustomSearchBox";
 import AssetsTable from "./projects/AssetsTable";
 
 function App() {
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies, setCookie] = useCookies(["email"]);
 
   function handleLogin(user) {
-    setCookie("user", user, { path: "/" });
+    setCookie("email", user, { path: "/" });
   }
 
   const router = createBrowserRouter([
@@ -33,6 +33,7 @@ function App() {
       path: "/projects", // Register route
       element: <CustomSearchBox />,
       element: <ProjectsTable />,
+      // element: <AssetsTable />,
     },
   ]);
 

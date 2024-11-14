@@ -16,35 +16,132 @@ const ProjectsTable = () => {
     date_end: "",
   });
 
+  //---------------------
+  // const getProject = async () => {
+  //   const response = await fetch("http://localhost:5000/projects");
+
+  //   try {
+  //     const getProject = await response.json();
+  //     console.log(getProject);
+  //     setProjects(getProject);
+  //     return getProject;
+  //   } catch (error) {
+  //     console.error("error", error);
+  //   }
+  // };
+  //---------------------
+
   const getProject = async () => {
-    const response = await fetch("http://localhost:5000/projects");
+    // Define any custom headers you need to include in your request
+    const headers = {
+      "Content-Type": "application/json", // Set content type if needed
+      session:
+        "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267", // Example header for authorization
+    };
 
     try {
-      const getProject = await response.json();
-      console.log(getProject);
-      setProjects(getProject);
-      return getProject;
+      // Make the fetch request with custom headers
+      const response = await fetch("http://localhost:5000/projects", {
+        method: "GET", // Use GET method for retrieving data
+        headers: headers, // Add the headers object to the request
+      });
+
+      // Check for a successful response
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Log the fetched data
+        setProjects(data); // Update state with the fetched projects
+        return data;
+      } else {
+        console.error(
+          "Error fetching projects:",
+          response.status,
+          response.statusText
+        );
+      }
     } catch (error) {
-      console.error("error", error);
+      console.error("Error:", error);
     }
   };
 
-  const addProject = async (newProject) => {
-    const response = await fetch("http://localhost:5000/projects", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProject), // Sends the full newProject object
-    });
+  // const addProject = async (newProject) => {
+  //   const response = await fetch("http://localhost:5000/projects", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(newProject), // Sends the full newProject object
+  //   });
 
-    if (response.ok) {
-      const addedProject = await response.json();
-      console.log("Project added:", addedProject);
-      // Optionally refresh the project list after adding
-      getProject();
-    } else {
-      console.error("Error adding project");
+  //   if (response.ok) {
+  //     const addedProject = await response.json();
+  //     console.log("Project added:", addedProject);
+  //     // Optionally refresh the project list after adding
+  //     getProject();
+  //   } else {
+  //     console.error("Error adding project");
+  //   }
+  // };
+
+  const addProject = async (newProjectArray) => {
+    const [name, type, client, date_start, date_end] = newProjectArray;
+
+    const newProjectObject = { name, type, client, date_start, date_end };
+
+    console.log("Sending project to API:", newProjectObject); // Log the data to check
+
+    try {
+      const response = await fetch("http://localhost:5000/project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProjectObject),
+        session:
+          "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267",
+      });
+
+      if (response.ok) {
+        console.log("Project added successfully:", await response.json()); // Log API response
+        await getProject(); // Refresh projects list
+      } else {
+        console.error(
+          "Error adding project:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const addProject = async (newProjectArray) => {
+    const [name, type, client, date_start, date_end] = newProjectArray;
+
+    const newProjectObject = { name, type, client, date_start, date_end };
+
+    console.log("Sending project to API:", newProjectObject); // Log the data to check
+
+    try {
+      const response = await fetch("http://localhost:5000/project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProjectObject),
+        session:
+          "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267",
+      });
+
+      if (response.ok) {
+        console.log("Project added successfully:", await response.json()); // Log API response
+        await getProject(); // Refresh projects list
+      } else {
+        console.error(
+          "Error adding project:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -176,13 +273,47 @@ const ProjectsTable = () => {
     });
   };
 
+  // const submitForm = () => {
+  // validation
+  // const isValid = true;
+
+  // if (isValid) {
+  //addProject();
+  // console.log("It Works!");
+  // }
+  // };
+
   const submitForm = () => {
-    // validation
-    const isValid = true;
+    // Validation
+    const isValid =
+      form.name && form.type && form.client && form.date_start && form.date_end;
 
     if (isValid) {
-      //addProject();
-      console.log("It Works!");
+      // Build the new project array from form data
+      const newProject = [
+        form.name,
+        form.type,
+        form.client,
+        form.date_start,
+        form.date_end,
+      ];
+
+      // Call addProject with the newProject array to add it to the database
+      addProject(newProject);
+
+      // Optionally reset the form after submission
+      setForm({
+        name: "",
+        type: "",
+        client: "",
+        date_start: "",
+        date_end: "",
+      });
+
+      // Hide the add form row
+      setAddFormVisible(false);
+    } else {
+      console.log("Please fill in all required fields");
     }
   };
 
@@ -190,6 +321,7 @@ const ProjectsTable = () => {
   const handleBlur = (e) => {
     if (!addFormRowRef.current.matches(":focus-within")) {
       submitForm();
+      console.log("Edit ROW Ref is working!");
     }
   };
 
@@ -285,6 +417,8 @@ const ProjectsTable = () => {
           {filteredProjects.map((project, rowIndex) => (
             <tr
               key={rowIndex}
+              // Conditionally attach the ref only to the selected (editable) row
+              ref={rowIndex === selectedRow ? addFormRowRef : null}
               onClick={() => handleRowClick(rowIndex)}
               style={{
                 backgroundColor:

@@ -10,7 +10,8 @@ const AssetsTable = () => {
 
   // Fetch asset list from API
   useEffect(() => {
-    fetch("/api/assets")
+    // fetch("/api/assets")
+    fetch("http://localhost:5000/projects")
       .then((response) => response.json())
       .then((data) => setAssets(data))
       .catch((error) => console.error("Error fetching assets:", error));
