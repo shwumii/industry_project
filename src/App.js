@@ -8,6 +8,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import ProjectsTable from "./projects/ProjectsTable";
 import CustomSearchBox from "./projects/CustomSearchBox";
 import AssetsBox from "./projects/AssetsBox";
+import Logout from "./logout/Logout";
 
 function App() {
     const [cookies, setCookie] = useCookies(["email"]);
@@ -38,6 +39,10 @@ function App() {
         {
             path: "/assets", // Register route
             element: <AssetsBox />,
+        },
+        {
+            path: "/logout", // Register route
+            element: <Logout />,
         },
     ]);
 
