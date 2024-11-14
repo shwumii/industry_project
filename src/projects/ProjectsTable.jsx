@@ -30,13 +30,13 @@ const ProjectsTable = () => {
   //   }
   // };
   //---------------------
-
-  const getProject = async () => {
+  
+    const getProject = async () => {
+        const session = localStorage.getItem("session");
     // Define any custom headers you need to include in your request
     const headers = {
       "Content-Type": "application/json", // Set content type if needed
-      session:
-        "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267", // Example header for authorization
+      "session": session, // Example header for authorization
     };
 
     try {
@@ -84,19 +84,17 @@ const ProjectsTable = () => {
   // };
 
   const addProject = async (newProjectArray) => {
-    const [name, type, client, date_start, date_end] = newProjectArray;
-
-    const newProjectObject = { name, type, client, date_start, date_end };
+      const [name, type, client, date_start, date_end] = newProjectArray;
+      const newProjectObject = { name, type, client, date_start, date_end };
+      const session = localStorage.getItem("session");
 
     console.log("Sending project to API:", newProjectObject); // Log the data to check
 
     try {
       const response = await fetch("http://localhost:5000/project", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "session": session,},
         body: JSON.stringify(newProjectObject),
-        session:
-          "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267",
       });
 
       if (response.ok) {
@@ -117,18 +115,15 @@ const ProjectsTable = () => {
   //STILL Work on this
   const updateProject = async (newProjectArray) => {
     const [name, type, client, date_start, date_end] = newProjectArray;
-
     const newProjectObject = { name, type, client, date_start, date_end };
-
+    const session = localStorage.getItem("session");
     console.log("Sending project to API:", newProjectObject); // Log the data to check
 
     try {
       const response = await fetch("http://localhost:5000/project", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "session": session },
         body: JSON.stringify(newProjectObject),
-        session:
-          "edd60db14650079b61c9751d07cc8a42cf4e38944b2f9adc6d4f29176aeed267",
       });
 
       if (response.ok) {
