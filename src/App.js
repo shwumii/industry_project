@@ -1,17 +1,58 @@
 import React from "react";
 import "./App.css";
-import Home from './components/Home';
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import Login from "./login/Login";
+import Register from "./register/Register";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { CookiesProvider, useCookies } from "react-cookie";
+import ProjectsTable from "./projects/ProjectsTable";
+import CustomSearchBox from "./projects/CustomSearchBox";
+import AssetsBox from "./projects/AssetsBox";
+import Logout from "./logout/Logout";
 
 function App() {
-  return (
-    <React.Fragment>
-        <Home/>
+    const [cookies, setCookie] = useCookies(["email"]);
 
-    </React.Fragment>
-    );  
+    function handleLogin(user) {
+        setCookie("email", user, { path: "/" });
+    }
+
+    const router = createBrowserRouter([
+        {
+            path: "/", // Home route
+            element: <Login />,
+        },
+        {
+            path: "/login", // Login route
+            element: <Login />,
+        },
+        {
+            path: "/register", // Register route
+            element: <Register />,
+        },
+        {
+            path: "/projects", // Register route
+            element: <CustomSearchBox />,
+            element: <ProjectsTable />,
+            // element: <AssetsTable />,
+        },
+        {
+            path: "/assets", // Register route
+            element: <AssetsBox />,
+        },
+        {
+            path: "/logout", // Register route
+            element: <Logout />,
+        },
+    ]);
+
+    return (
+        <CookiesProvider>
+            <div className="App">
+                <RouterProvider router={router} />
+            </div>
+        </CookiesProvider>
+    );
 }
 
 export default App;

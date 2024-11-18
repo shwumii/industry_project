@@ -1,1 +1,38 @@
-node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/.vs
+/.vs/industry_project
+/.vs/industry_project/config
+/.vs/industry_project/config/applicationhost.config
+/.vs/industry_project/FileContentIndex
+/.vs/industry_project/FileContentIndex/03fe4175-6f0d-4d44-8062-1216b4477839.vsidx
+/.vs/industry_project/v17
+/.vs/industry_project/v17/.wsuo
+/.vs/industry_project/v17/DocumentLayout.backup.json
+/.vs/industry_project/v17/DocumentLayout.json
+/.vs/industry_project/v17/TestStore/0
+/.vs/industry_project/v17/TestStore/0/000.testlog
+/.vs/industry_project/v17/TestStore/0/testlog.manifest
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
